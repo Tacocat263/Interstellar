@@ -2,9 +2,9 @@
 document.addEventListener('DOMContentLoaded', function () {
   function adChange(selectedValue) {
     if (selectedValue === 'default') {
-      localStorage.setItem('ad', 'true')
+      localStorage.setItem('ad', 'on')
     } else if (selectedValue === 'off') {
-      localStorage.setItem('ad', 'false')
+      localStorage.setItem('ad', 'off')
     }
   }
 
@@ -17,15 +17,46 @@ document.addEventListener('DOMContentLoaded', function () {
     })
 
     var storedAd = localStorage.getItem('ad')
-    if (storedAd === 'true') {
+    if (storedAd === 'on') {
       adTypeElement.value = 'default'
-    } else if (storedAd === 'false') {
+    } else if (storedAd === 'off') {
       adTypeElement.value = 'off'
     } else {
       adTypeElement.value = 'default'
     }
   }
 })
+// Dyn
+document.addEventListener('DOMContentLoaded', function () {
+  function pChange(selectedValue) {
+    if (selectedValue === 'uv') {
+      localStorage.setItem('uv', 'true')
+      localStorage.setItem('dy', 'false')
+    } else if (selectedValue === 'dy') {
+      localStorage.setItem('uv', 'false')
+      localStorage.setItem('dy', 'true')
+    }
+  }
+
+  var pChangeElement = document.getElementById('pChange')
+
+  if (pChangeElement) {
+    pChangeElement.addEventListener('change', function () {
+      var selectedOption = this.value
+      pChange(selectedOption)
+    })
+
+    var storedP = localStorage.getItem('uv')
+    if (storedP === 'true') {
+      pChangeElement.value = 'uv'
+    } else if (localStorage.getItem('dy') === 'true' || localStorage.getItem('dy') === 'auto') {
+      pChangeElement.value = 'dy'
+    } else {
+      pChangeElement.value = 'uv'
+    }
+  }
+})
+
 // Key
 var eventKey = localStorage.getItem('eventKey') || '`'
 var pLink = localStorage.getItem('pLink') || 'https://classroom.google.com/'
@@ -56,6 +87,21 @@ function saveEventKey() {
   localStorage.setItem('pLink', pLink)
 }
 // Tab Cloaker
+var dropdown = document.getElementById('dropdown');
+var options = dropdown.getElementsByTagName('option');
+  
+var sortedOptions = Array.from(options).sort(function(a, b) {
+  return a.textContent.localeCompare(b.textContent);
+});
+
+while (dropdown.firstChild) {
+  dropdown.removeChild(dropdown.firstChild);
+}
+
+sortedOptions.forEach(function(option) {
+  dropdown.appendChild(option);
+});
+
 function saveIcon() {
   const iconElement = document.getElementById('icon')
   const iconValue = iconElement.value
@@ -255,5 +301,34 @@ function toggleAB() {
     localStorage.setItem('ab', 'false')
   } else {
     localStorage.setItem('ab', 'true')
+  }
+}
+// Search Engine
+function EngineChange(dropdown) {
+  var selectedEngine = dropdown.value
+
+  var engineUrls = {
+    Google: 'https://www.google.com/search?q=',
+    Bing: 'https://www.bing.com/search?q=',
+    DuckDuckGo: 'https://duckduckgo.com/?q=',
+    Qwant: 'https://www.qwant.com/?q=',
+    Startpage: 'https://www.startpage.com/search?q=',
+    SearchEncrypt: 'https://www.searchencrypt.com/search/?q=',
+    Ecosia: 'https://www.ecosia.org/search?q=',
+  }
+
+  localStorage.setItem('engine', engineUrls[selectedEngine])
+  localStorage.setItem('enginename', selectedEngine)
+
+  dropdown.value = selectedEngine
+}
+
+function SaveEngine() {
+  var customEngine = document.getElementById('engine-form').value
+  if (customEngine.trim() !== '') {
+    localStorage.setItem('engine', customEngine)
+    localStorage.setItem('enginename', 'Custom')
+  } else {
+    alert('Please enter a custom search engine value.')
   }
 }
